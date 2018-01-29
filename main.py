@@ -34,7 +34,7 @@ Rect = [(0, 300, 1080, 1350), (0, 400, 1080, 1300), (0, 450, 1080, 1400), (0, 17
 
 keyVM = {'F2': '', 'F4' : 'SS1', 'F6' : 'SS2' }
 
-keyRect = {'F2' : Rect[0], 'F4' : Rect[3], 'F6' : Rect[3]}
+keyRect = {'F2' : Rect[0], 'F4' : Rect[0], 'F6' : Rect[3]}
 
 search_engine = 'http://www.baidu.com'
 
@@ -80,7 +80,7 @@ def getCutImage(key):
         cutImage.save(cutPicPath)
         return get_file_content(cutPicPath)
     else:
-        
+        '''
         vmName = keyVM[key]
         window = win32gui.FindWindow(None, vmName)
         win32gui.ShowWindow(window, win32con.SW_RESTORE)
@@ -92,8 +92,8 @@ def getCutImage(key):
         fullImage = ImageGrab.grab(fullRect)
         #fullImage.show()
         fullImage.save(os.path.join(data_directory, time.strftime('%m_%d_%H_%M_%S',time.localtime(time.time()))+'_full.png'))
-        
-        #fullImage = Image.open('./screenshots/1.png')
+        '''
+        fullImage = Image.open('./screenshots/01_28_22_11_43_full.png')
         cutImage = fullImage.crop(keyRect[key])
         cutPicPath = os.path.join(data_directory,time.strftime('%m_%d_%H_%M_%S', time.localtime(time.time())) + '_cut.png')
         cutImage.save(cutPicPath)
@@ -224,7 +224,24 @@ def work(key):
         global isComplete
         if isComplete == True:
             for i in range(1,4):
-                js='var re = new RegExp('+'"'+QA[i]+'"'+',"gmi");var box=document.getElementById("content_left");box.innerHTML = box.innerHTML.replace(re,\'<span style="background-color:#ff0">\'+'+'"'+QA[i]+'"'+'+\'</span>\');'
+                js= 'var re = new RegExp('+'"'+QA[i]+'"'+',"gmi");' \
+                    'var h3s = document.getElementsByTagName("h3");' \
+                    'for (var i=0;i<h3s.length;i++){' \
+                        'var title = h3s[i].getElementsByTagName("a")[0];' \
+                        'title.innerHTML = title.innerHTML.replace(re,\'<span style="background-color:#ff0">\'+'+'"'+QA[i]+'"'+'+\'</span>\');' \
+                    '}' \
+                    'var r1 = document.getElementsByClassName("newTimeFactor_before_abs");' \
+                    'for (var i=0;i<r1.length;i++){' \
+                        'r1[i].innerHTML="";' \
+                    '}' \
+                    'var r2 = document.getElementsByClassName("f13");' \
+                    'for (var i=0;i<r2.length;i++){' \
+                        'r2[i].innerHTML="";' \
+                    '}' \
+                    'var abstracts = document.getElementsByClassName("c-abstract");' \
+                    'for (var i=0;i<abstracts.length;i++){' \
+                        'abstracts[i].innerHTML = abstracts[i].innerHTML.replace(re,\'<span style="background-color:#ff0">\'+'+'"'+QA[i]+'"'+'+\'</span>\');' \
+                    '}'
                 #print(js)
                 browser.execute_script(js)
 
